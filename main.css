@@ -1,0 +1,105 @@
+body {
+  background: darkgreen;
+  font-family: Helvetica, Arial, sans-serif;
+  margin: 0px;
+  padding: 0px;
+  overflow-x: hidden;
+}
+
+main {
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+
+main.visible {
+  display: block;
+}
+
+header {
+  margin: 0px;
+  padding: 0 15px;
+  background: white;
+  display: flex;
+  justify-content: space-between;
+}
+
+.dialog {
+  background: white;
+  margin: 20vh auto;
+  height: 15rem;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2rem;
+}
+
+.textButton {
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  background: none;
+  height: 2rem;
+}
+
+#editLayout header input {
+  display: none;
+}
+
+#layoutEditor {
+  padding: 2rem;
+}
+
+.row {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid red;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.row.addRow {
+  border-style: dashed;
+}
+
+.slot {
+  height: 9rem;
+  width: 5.5rem;
+  border: 1px solid white;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem;
+  background: #aaaaaa50;
+}
+
+.slot.addSlot {
+  border-style: dashed;
+}
+
+.slot.spacer {
+  border-color: darkgray;
+  color: darkgray;
+  background: #aaaaaa75;
+}
+
+.slot.deck {
+  border-color: lightgreen;
+  color: lightgreen;
+}
+
+.slot.foundation {
+  border-color: aliceblue;
+  color: aliceblue;
+}
+
+.slot.waste {
+  border-color: rebeccapurple;
+  color: rebeccapurple;
+  background: #aaaaaa75;
+}

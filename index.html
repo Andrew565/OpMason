@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Operation Mason</title>
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body>
+    <main id="home" class="visible">
+      <header>
+        <h1>Card Game Layout Maker <small>(Operation Mason)</small></h1>
+      </header>
+      <div class="dialog">
+        <button id="newLayoutFromScratch" class="textButton" data-target="newFromScratch">
+          New Layout from Scratch
+        </button>
+        <button class="textButton">New Layout from Template</button>
+        <button class="textButton">Load Existing Layout</button>
+      </div>
+    </main>
+    <main id="editLayout" class="">
+      <header>
+        <h1 id="layoutTitle" class="active">
+          <button id="editLayoutTitle" class="textButton">Untitled Layout ✎</button>
+        </h1>
+        <input type="text" id="editedLayoutTitle" value="Untitled Layout" />
+      </header>
+      <section id="layoutEditor">
+        <template id="defaultNewLayout">
+          <div>
+            <div class="row">
+              <div class="slot addSlot">
+                <button class="addButton" data-add-type="slot">+ Slot</button>
+              </div>
+            </div>
+            <div class="row addRow">
+              <button class="addButton" data-add-type="row">+ Row</button>
+            </div>
+          </div>
+        </template>
+      </section>
+    </main>
+    <script src="index.js"></script>
+  </body>
+</html>
