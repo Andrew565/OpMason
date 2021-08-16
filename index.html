@@ -8,6 +8,18 @@
     <link rel="stylesheet" href="main.css" />
   </head>
   <body>
+    <template id="defaultNewLayout">
+      <div>
+        <div class="row">
+          <div class="slot addSlot">
+            <button class="addButton" data-add-type="slot">+ Slot</button>
+          </div>
+        </div>
+        <div class="row addRow">
+          <button class="addButton" data-add-type="row">+ Row</button>
+        </div>
+      </div>
+    </template>
     <main id="home" class="visible">
       <header>
         <h1>Card Game Layout Maker <small>(Operation Mason)</small></h1>
@@ -27,20 +39,7 @@
         </h1>
         <input type="text" id="editedLayoutTitle" value="Untitled Layout" />
       </header>
-      <section id="layoutEditor">
-        <template id="defaultNewLayout">
-          <div>
-            <div class="row">
-              <div class="slot addSlot">
-                <button class="addButton" data-add-type="slot">+ Slot</button>
-              </div>
-            </div>
-            <div class="row addRow">
-              <button class="addButton" data-add-type="row">+ Row</button>
-            </div>
-          </div>
-        </template>
-      </section>
+      <section id="layoutEditor"></section>
     </main>
     <script src="index.js"></script>
   </body>
