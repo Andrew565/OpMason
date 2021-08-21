@@ -1,4 +1,8 @@
+/** General Setup */
+
 const screens = document.getElementsByTagName("main");
+
+/** Routing */
 
 const dialogButtons = document.querySelectorAll(".dialog button");
 dialogButtons.forEach((btn) => {
@@ -19,6 +23,8 @@ function makeInvisible(screen) {
   screen.classList.remove("visible");
 }
 
+/** Layout Loading */
+
 const layouts = {
   newFromScratch: "defaultNewLayout",
 };
@@ -34,6 +40,9 @@ function getLayout(layoutID) {
   const template = /** @type {HTMLTemplateElement} */ (document.getElementById(layoutID));
   return template.content.firstElementChild.cloneNode(true);
 }
+
+
+/** Layout Editing */
 
 const addableThings = {
   slot: `Slot`,
@@ -67,3 +76,4 @@ function addButtonListeners() {
     btn.addEventListener("click", addThing);
   });
 }
+
