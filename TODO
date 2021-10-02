@@ -1,0 +1,7 @@
+- [ ] Create an "import" button in the HTML
+- [ ] Add a file upload modal
+- [ ] Take the file that is uploaded and parse it into HTML
+- [ ] Append "create new" elements
+- [ ] Add HTML to DOM
+- [ ] Wire elements up
+- [ ] Switch views to the new layout

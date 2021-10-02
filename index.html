@@ -34,6 +34,12 @@
       <button class="textButton">Load Existing Layout</button>
     </div>
   </main>
+  <dialog id="existingFileDialog">
+    <h1>Load Existing Layout</h1>
+    <label for="layoutFile">Select existing layout (<em>something</em>.cgel.json):</label>
+    <input type="file" name="layoutFile" id="layoutFile" accept=".json" />
+    <input id="layoutFileButton" type="button" value="Import">
+  </dialog>
   <main id="editLayout" class="">
     <header>
       <div>
