@@ -1,8 +1,9 @@
-/** General Setup */
+// General Setup
 
 const screens = document.getElementsByTagName("main");
+const slotTypes = ["deck", "spacer", "foundation", "waste"];
 
-/** Routing */
+// Routing
 
 const dialogButtons = document.querySelectorAll(".dialog button");
 dialogButtons.forEach((btn) => {
@@ -23,7 +24,7 @@ function makeInvisible(screen) {
   screen.classList.remove("visible");
 }
 
-/** Layout Loading */
+// Layout Loading
 
 const layouts = {
   newFromScratch: "defaultNewLayout",
@@ -41,22 +42,30 @@ function getLayout(layoutID) {
   return template.content.firstElementChild.cloneNode(true);
 }
 
+// TODO: Layout Loading - From Template
 
-/** Layout Editing */
+// Layout Editing - Adding
 
+/** @type {{[x: string]: () => string}} */
 const addableThings = {
-  slot: `Slot`,
-  row: `<div class="slot">
-          <button class="addButton" data-add-type="slot">+ Slot</button>
-        </div>`,
+  /** @param {string[]} mods */
+  slot: (mods = ["slot"]) => mods.map(modSpan).join(String.raw`<br>`),
+  row: () => String.raw`
+    <div class="slot">
+      <button class="addButton" data-add-type="slot">+ Slot</button>
+    </div>
+  `,
 };
+
+/** @param {string} mod */
+const modSpan = (mod) => String.raw`<span class="${mod}">${mod}</span>`;
 
 /** @type {EventListener} */
 function addThing(e) {
   const target = /** @type {HTMLButtonElement} */ (e.target);
 
   const thingToAdd = target.dataset.addType;
-  const newThing = addableThings[thingToAdd];
+  const newThing = addableThings[thingToAdd]();
   const newEl = document.createElement("div");
   newEl.classList.add(thingToAdd);
   newEl.innerHTML = newThing;
@@ -77,3 +86,127 @@ function addButtonListeners() {
   });
 }
 
+// TODO: Layout Editing - Updating
+
+function addSlotListeners() {
+  const slots = document.querySelectorAll(".slot:not(.addSlot)");
+  slots.forEach((slotEl) => {
+    slotEl.addEventListener("click", showSlotEditor);
+  });
+}
+
+/** @type {EventListener} */
+function showSlotEditor(e) {
+  // Init vars
+  const slotEl = /** @type {HTMLElement} */ (e.target);
+  const slotType = getSlotType(slotEl);
+  const modifiers = getMods(slotEl);
+  const slotEditorTemplate = /** @type {HTMLTemplateElement} */ (document.getElementById("slotEditorTemplate"));
+  const newSlotEditor = slotEditorTemplate.content.firstElementChild.cloneNode(true);
+
+  // Attach to DOM
+  document.getElementById("editLayout").appendChild(newSlotEditor);
+  const newSlotEditorEl = document.getElementById("slotEditor");
+
+  // Set pre-existing options
+  const slotTypeOption = /** @type {HTMLOptionElement} */ (
+    newSlotEditorEl.querySelector(`option[value="${slotType}"]`)
+  );
+  slotTypeOption.selected = true;
+
+  // Set pre-existing modifiers (if any)
+  if (modifiers.length > 0) {
+    newSlotEditorEl.dataset.modifiers = modifiers.map((mod) => mod.kind).join(",");
+
+    const limited = modifiers.find((mod) => mod.kind === "limited");
+    if (limited) {
+      newSlotEditorEl.dataset.limit = limited.quantity;
+    }
+  }
+}
+
+/**
+ * @param {HTMLElement} target
+ * @param {string} mod
+ */
+function addModifier(target, mod) {
+  if (slotTypes.includes(mod)) {
+    target.classList.add(mod);
+  } else {
+    target.dataset.modifiers = `${mod},${target.dataset.modifiers}`;
+  }
+}
+
+/**
+ * @param {HTMLElement} target
+ * @param {string} mod
+ */
+function removeModifier(target, mod) {
+  if (slotTypes.includes(mod)) {
+    target.classList.remove(mod);
+  } else {
+    target.dataset.modifiers.includes(mod) && target.dataset.modifiers.replace(mod, "");
+  }
+}
+
+// TODO: Layout Editing - Removing
+
+// Layout Editing - Saving
+function saveLayout() {
+  const layoutObj = { rows: [] };
+  const layout = document.getElementById("layoutEditor").firstElementChild;
+  const rows = layout.querySelectorAll(".row:not(.addRow)");
+
+  rows.forEach((row) => {
+    const rowArr = [];
+
+    /** @type {NodeListOf<HTMLElement>} */
+    const slots = row.querySelectorAll(".slot:not(.addSlot)");
+    slots.forEach((slot) => {
+      const slotType = getSlotType(slot);
+      const modifiers = getMods(slot);
+      const slotObj = { slotType, modifiers };
+
+      rowArr.push(slotObj);
+    });
+
+    layoutObj.rows.push(rowArr);
+  });
+
+  const finalLayout = JSON.stringify(layoutObj);
+  console.log("Layout:");
+  console.log(finalLayout);
+  alert("Layout printed out in console.");
+
+  // TODO: display and/or write to a file the layoutObj
+}
+
+/** @param {HTMLElement} slot */
+function getSlotType(slot) {
+  let slotType = "SLOT";
+  if (slot.classList.length > 1) {
+    const classes = slot.classList;
+    classes.remove("slot");
+    slotType = classes.item(0).toUpperCase();
+  }
+  return slotType;
+}
+
+/** @typedef {{kind: string; quantity: undefined | string}} ModObj */
+
+/**
+ * @param {HTMLElement} slot
+ * @returns {ModObj[]}
+ */
+function getMods(slot) {
+  const modifiers = [];
+  if ("modifiers" in slot.dataset) {
+    const mods = slot.dataset.modifiers.split(",");
+    mods.forEach((mod) => {
+      const modObj = { kind: mod, quantity: undefined };
+      if (mod === "limited") modObj.quantity = slot.dataset.limit;
+      modifiers.push(modObj);
+    });
+  }
+  return modifiers;
+}
