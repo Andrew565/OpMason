@@ -1,7 +1,13 @@
+/**
+ * @typedef {{kind: string; quantity: undefined | string}} ModObj
+ * @typedef {(opt?: string | string[]) => string} MasonComponent
+ */
+
 // General Setup
 
 const screens = document.getElementsByTagName("main");
 const slotTypes = ["deck", "spacer", "foundation", "waste"];
+const newLayout = { title: "Untitled Document", rows: {} };
 
 // Routing
 
@@ -46,26 +52,26 @@ function getLayout(layoutID) {
 
 // Layout Editing - Adding
 
-/** @type {{[x: string]: () => string}} */
-const addableThings = {
-  /** @param {string[]} mods */
-  slot: (mods = ["slot"]) => mods.map(modSpan).join(String.raw`<br>`),
+/** @type {{[x: string]: MasonComponent}} */
+const components = {
+  slot: (mods = ["slot"]) => Array.isArray(mods) && mods.map(components.modSpan).join(String.raw`<br>`),
   row: () => String.raw`
     <div class="slot">
       <button class="addButton" data-add-type="slot">+ Slot</button>
     </div>
   `,
+  titleInput: () => String.raw`
+    <input type="text" id="newLayoutTitle" value="${newLayout.title}" />
+  `,
+  modSpan: (mod) => String.raw`<span class="${mod}">${mod}</span>`,
 };
-
-/** @param {string} mod */
-const modSpan = (mod) => String.raw`<span class="${mod}">${mod}</span>`;
 
 /** @type {EventListener} */
 function addThing(e) {
   const target = /** @type {HTMLButtonElement} */ (e.target);
 
   const thingToAdd = target.dataset.addType;
-  const newThing = addableThings[thingToAdd]();
+  const newThing = components[thingToAdd]();
   const newEl = document.createElement("div");
   newEl.classList.add(thingToAdd);
   newEl.innerHTML = newThing;
@@ -86,7 +92,7 @@ function addButtonListeners() {
   });
 }
 
-// TODO: Layout Editing - Updating
+// Layout Editing - Updating
 
 function addSlotListeners() {
   const slots = document.querySelectorAll(".slot:not(.addSlot)");
@@ -107,6 +113,14 @@ function showSlotEditor(e) {
   // Attach to DOM
   document.getElementById("editLayout").appendChild(newSlotEditor);
   const newSlotEditorEl = document.getElementById("slotEditor");
+
+  // TODO: Setup listener for Layout Title change
+  document.getElementById("editLayoutTitle").addEventListener("click", () => {
+    // Remove the 'editLayoutTitle' button
+    // Attach components.newLayoutTitle
+    // Add event listener to nLT 'save' button
+    // // Revert to 'editLayoutTitle' button after new title saved
+  });
 
   // Set pre-existing options
   const slotTypeOption = /** @type {HTMLOptionElement} */ (
@@ -191,8 +205,6 @@ function getSlotType(slot) {
   }
   return slotType;
 }
-
-/** @typedef {{kind: string; quantity: undefined | string}} ModObj */
 
 /**
  * @param {HTMLElement} slot
