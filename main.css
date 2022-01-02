@@ -16,6 +16,10 @@ main.visible {
   display: block;
 }
 
+.hide {
+  display: none;
+}
+
 header {
   margin: 0px;
   padding: 0 15px;

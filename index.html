@@ -75,10 +75,11 @@
     <main id="editLayout">
       <header>
         <div>
-          <h1 id="layoutTitle" class="active">
-            <button id="editLayoutTitle" class="textButton">Untitled Layout</button> ✎
-          </h1>
-          <input type="text" id="editedLayoutTitle" value="Untitled Layout" />
+          <h1 id="layoutTitle"><button id="editLayoutTitle" class="textButton">Untitled Layout</button> ✎</h1>
+          <div id="layoutTitleEditor" class="hide">
+            <input type="text" id="editedLayoutTitle" value="Untitled Layout" />
+            <button id="saveEditedLayoutTitle">Save</button>
+          </div>
         </div>
         <div id="layoutEditorActions">
           <button id="newLayout" class="textButton">New 📄</button>

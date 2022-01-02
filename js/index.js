@@ -1,17 +1,44 @@
 /**
+ * @typedef {HTMLElement & {addC: typeof DOMTokenList.prototype.add, remC: typeof DOMTokenList.prototype.remove,hasC: typeof DOMTokenList.prototype.contains, toggleC: typeof DOMTokenList.prototype.toggle}} CustomSelectorElement
  * @typedef {{kind: string; quantity: undefined | string}} ModObj
  * @typedef {(opt?: string | string[]) => string} MasonComponent
  */
 
 // General Setup
 
-const screens = document.getElementsByTagName("main");
+const addClassHandlers = (/** @type {CustomSelectorElement} */ el) => {
+  el.addC = el.classList.add;
+  el.remC = el.classList.remove;
+  el.hasC = el.classList.contains;
+  el.toggleC = el.classList.toggle;
+  return el;
+};
+
+const $ = (/** @type {string} */ selector) => {
+  /** @type {CustomSelectorElement} */
+  let el = document.querySelector(selector);
+  return addClassHandlers(el);
+};
+const $$ = (/** @type {string} */ selector) => {
+  let els = /** @type {CustomSelectorElement[]} */ (Array.from(document.querySelectorAll(selector)));
+  return els.map(addClassHandlers);
+};
+const screens = $$("main");
 const slotTypes = ["deck", "spacer", "foundation", "waste"];
-const newLayout = { title: "Untitled Document", rows: {} };
+
+function createNewLayout() {
+  return { title: "Untitled Document", rows: {} };
+}
+const newLayout = createNewLayout();
+
+function cloneTemplate(/** @type {string} */ tmplId) {
+  const template = /** @type {HTMLTemplateElement} */ (/** @type {unknown} */ ($(`#${tmplId}`)));
+  return template.content.firstElementChild.cloneNode(true);
+}
 
 // Routing
 
-const dialogButtons = document.querySelectorAll(".dialog button");
+const dialogButtons = $$(".dialog button");
 dialogButtons.forEach((btn) => {
   btn.addEventListener("click", switchToEditor);
 });
@@ -19,15 +46,15 @@ dialogButtons.forEach((btn) => {
 /** @type {EventListener} */
 function switchToEditor(e) {
   const targetLayout = /** @type {HTMLButtonElement} */ (e.target).dataset.target;
-  for (let screen of screens) makeInvisible(screen);
-  const editLayoutScreen = document.getElementById("editLayout");
-  editLayoutScreen.classList.add("visible");
+  screens.forEach(makeInvisible);
+  const editLayoutScreen = $("#editLayout");
+  editLayoutScreen.addC("visible");
   loadLayout(targetLayout);
 }
 
-/** @param {HTMLElement} screen */
+/** @param {CustomSelectorElement} screen */
 function makeInvisible(screen) {
-  screen.classList.remove("visible");
+  screen.remC("visible");
 }
 
 // Layout Loading
@@ -36,16 +63,11 @@ const layouts = {
   newFromScratch: "defaultNewLayout",
 };
 
-function loadLayout(/** @type {string} */ targetLayout) {
-  const layout = getLayout(layouts[targetLayout]);
-  document.getElementById("layoutEditor").appendChild(layout);
+/** @param {string} targetLayout */
+function loadLayout(targetLayout) {
+  const layout = cloneTemplate(layouts[targetLayout]);
+  $("#layoutEditor").appendChild(layout);
   addButtonListeners();
-}
-
-/** @param {string} layoutID */
-function getLayout(layoutID) {
-  const template = /** @type {HTMLTemplateElement} */ (document.getElementById(layoutID));
-  return template.content.firstElementChild.cloneNode(true);
 }
 
 // TODO: Layout Loading - From Template
@@ -59,9 +81,6 @@ const components = {
     <div class="slot">
       <button class="addButton" data-add-type="slot">+ Slot</button>
     </div>
-  `,
-  titleInput: () => String.raw`
-    <input type="text" id="newLayoutTitle" value="${newLayout.title}" />
   `,
   modSpan: (mod) => String.raw`<span class="${mod}">${mod}</span>`,
 };
@@ -80,13 +99,13 @@ function addThing(e) {
     const parent = target.parentNode.parentNode;
     parent.prepend(newEl);
   } else {
-    const addRowEl = document.querySelector(".addRow");
+    const addRowEl = $(".addRow");
     addRowEl.insertAdjacentElement("beforebegin", newEl);
   }
 }
 
 function addButtonListeners() {
-  const addButtons = document.querySelectorAll(".addButton");
+  const addButtons = $$(".addButton");
   addButtons.forEach((btn) => {
     btn.addEventListener("click", addThing);
   });
@@ -95,10 +114,33 @@ function addButtonListeners() {
 // Layout Editing - Updating
 
 function addSlotListeners() {
-  const slots = document.querySelectorAll(".slot:not(.addSlot)");
+  const slots = $$(".slot:not(.addSlot)");
   slots.forEach((slotEl) => {
     slotEl.addEventListener("click", showSlotEditor);
   });
+}
+
+/** @type {EventListener} */
+function saveLayoutTitle(e) {
+  // TODO: This
+}
+
+/** @type {EventListener} */
+function editLayoutTitle(e) {
+  // Make the 'layoutTitle' h1 invisible
+  const h1 = $("#layoutTitle");
+  h1.addC("hide");
+
+  // Make layout title input visible
+  const titleEditor = $("#layoutTitleEditor");
+  titleEditor.addC("hide");
+
+  // Add event listener to 'save' button
+  const saveBtn = $("#saveEditedLayoutTitle");
+  saveBtn.addEventListener("click", saveLayoutTitle);
+
+  // Revert to 'layoutTitle' h1 after new title saved
+  h1.remC("hide");
 }
 
 /** @type {EventListener} */
@@ -107,20 +149,14 @@ function showSlotEditor(e) {
   const slotEl = /** @type {HTMLElement} */ (e.target);
   const slotType = getSlotType(slotEl);
   const modifiers = getMods(slotEl);
-  const slotEditorTemplate = /** @type {HTMLTemplateElement} */ (document.getElementById("slotEditorTemplate"));
-  const newSlotEditor = slotEditorTemplate.content.firstElementChild.cloneNode(true);
+  const newSlotEditor = cloneTemplate("slotEditorTemplate");
 
   // Attach to DOM
-  document.getElementById("editLayout").appendChild(newSlotEditor);
-  const newSlotEditorEl = document.getElementById("slotEditor");
+  $("#editLayout").appendChild(newSlotEditor);
+  const newSlotEditorEl = $("#slotEditor");
 
-  // TODO: Setup listener for Layout Title change
-  document.getElementById("editLayoutTitle").addEventListener("click", () => {
-    // Remove the 'editLayoutTitle' button
-    // Attach components.newLayoutTitle
-    // Add event listener to nLT 'save' button
-    // // Revert to 'editLayoutTitle' button after new title saved
-  });
+  // Setup listener for Layout Title change
+  $("#editLayoutTitle").addEventListener("click", editLayoutTitle);
 
   // Set pre-existing options
   const slotTypeOption = /** @type {HTMLOptionElement} */ (
@@ -168,7 +204,7 @@ function removeModifier(target, mod) {
 // Layout Editing - Saving
 function saveLayout() {
   const layoutObj = { rows: [] };
-  const layout = document.getElementById("layoutEditor").firstElementChild;
+  const layout = $("#layoutEditor").firstElementChild;
   const rows = layout.querySelectorAll(".row:not(.addRow)");
 
   rows.forEach((row) => {
