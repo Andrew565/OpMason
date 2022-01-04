@@ -76,10 +76,12 @@
       <header>
         <div>
           <h1 id="layoutTitle"><button id="editLayoutTitle" class="textButton">Untitled Layout</button> ✎</h1>
-          <div id="layoutTitleEditor" class="hide">
-            <input type="text" id="editedLayoutTitle" value="Untitled Layout" />
-            <button id="saveEditedLayoutTitle">Save</button>
-          </div>
+          <h1 id="layoutTitleEditor" class="hide">
+            <form action="javascript:void">
+              <input type="text" id="editedLayoutTitle" value="Untitled Layout" />
+              <button type="submit" id="saveEditedLayoutTitle">Save</button>
+            </form>
+          </h1>
         </div>
         <div id="layoutEditorActions">
           <button id="newLayout" class="textButton">New 📄</button>

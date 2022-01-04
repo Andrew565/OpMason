@@ -47,10 +47,6 @@ header {
   height: 2rem;
 }
 
-#editLayout header input {
-  display: none;
-}
-
 #layoutEditor {
   padding: 2rem;
 }

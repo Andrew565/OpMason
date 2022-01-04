@@ -1,30 +1,15 @@
 /**
- * @typedef {HTMLElement & {addC: typeof DOMTokenList.prototype.add, remC: typeof DOMTokenList.prototype.remove,hasC: typeof DOMTokenList.prototype.contains, toggleC: typeof DOMTokenList.prototype.toggle}} CustomSelectorElement
  * @typedef {{kind: string; quantity: undefined | string}} ModObj
  * @typedef {(opt?: string | string[]) => string} MasonComponent
  */
 
 // General Setup
 
-const addClassHandlers = (/** @type {CustomSelectorElement} */ el) => {
-  el.addC = el.classList.add;
-  el.remC = el.classList.remove;
-  el.hasC = el.classList.contains;
-  el.toggleC = el.classList.toggle;
-  return el;
-};
-
-const $ = (/** @type {string} */ selector) => {
-  /** @type {CustomSelectorElement} */
-  let el = document.querySelector(selector);
-  return addClassHandlers(el);
-};
-const $$ = (/** @type {string} */ selector) => {
-  let els = /** @type {CustomSelectorElement[]} */ (Array.from(document.querySelectorAll(selector)));
-  return els.map(addClassHandlers);
-};
+const $ = (/** @type {string} */ selector) => document.querySelector(selector);
+const $$ = (/** @type {string} */ selector) => Array.from(document.querySelectorAll(selector));
 const screens = $$("main");
 const slotTypes = ["deck", "spacer", "foundation", "waste"];
+let currentLayout = { title: "Unknown Layout", rows: [] };
 
 function createNewLayout() {
   return { title: "Untitled Document", rows: {} };
@@ -32,7 +17,7 @@ function createNewLayout() {
 const newLayout = createNewLayout();
 
 function cloneTemplate(/** @type {string} */ tmplId) {
-  const template = /** @type {HTMLTemplateElement} */ (/** @type {unknown} */ ($(`#${tmplId}`)));
+  const template = /** @type {HTMLTemplateElement} */ ($(`#${tmplId}`));
   return template.content.firstElementChild.cloneNode(true);
 }
 
@@ -48,13 +33,45 @@ function switchToEditor(e) {
   const targetLayout = /** @type {HTMLButtonElement} */ (e.target).dataset.target;
   screens.forEach(makeInvisible);
   const editLayoutScreen = $("#editLayout");
-  editLayoutScreen.addC("visible");
+  editLayoutScreen.classList.add("visible");
   loadLayout(targetLayout);
 }
 
-/** @param {CustomSelectorElement} screen */
+/**
+ * @param {Element} screen
+ */
 function makeInvisible(screen) {
-  screen.remC("visible");
+  screen.classList.remove("visible");
+}
+
+/** @type {EventListener} */
+function saveLayoutTitle() {
+  const titleInput = /** @type {HTMLInputElement} */ ($("#editedLayoutTitle"));
+  const newTitle = titleInput.value;
+  currentLayout.title = newTitle;
+  const titleEl = /** @type {HTMLElement} */ ($("#editLayoutTitle"));
+  titleEl.innerText = newTitle;
+
+  // Revert to 'layoutTitle' h1 after new title saved
+  const titleEditor = $("#layoutTitleEditor");
+  titleEditor.classList.add("hide");
+  const h1 = $("#layoutTitle");
+  h1.classList.remove("hide");
+}
+
+/** @type {EventListener} */
+function editLayoutTitle() {
+  // Make the 'layoutTitle' h1 invisible
+  const h1 = $("#layoutTitle");
+  h1.classList.add("hide");
+
+  // Make layout title input visible
+  const titleEditor = $("#layoutTitleEditor");
+  titleEditor.classList.remove("hide");
+
+  // Add event listener to 'save' button
+  const saveBtn = $("#saveEditedLayoutTitle");
+  saveBtn.addEventListener("click", saveLayoutTitle);
 }
 
 // Layout Loading
@@ -68,6 +85,9 @@ function loadLayout(targetLayout) {
   const layout = cloneTemplate(layouts[targetLayout]);
   $("#layoutEditor").appendChild(layout);
   addButtonListeners();
+
+  // Setup listener for Layout Title change
+  $("#layoutTitle").addEventListener("click", editLayoutTitle);
 }
 
 // TODO: Layout Loading - From Template
@@ -78,7 +98,7 @@ function loadLayout(targetLayout) {
 const components = {
   slot: (mods = ["slot"]) => Array.isArray(mods) && mods.map(components.modSpan).join(String.raw`<br>`),
   row: () => String.raw`
-    <div class="slot">
+    <div class="slot addSlot">
       <button class="addButton" data-add-type="slot">+ Slot</button>
     </div>
   `,
@@ -88,6 +108,7 @@ const components = {
 /** @type {EventListener} */
 function addThing(e) {
   const target = /** @type {HTMLButtonElement} */ (e.target);
+  console.log("addThing called with target: ", target);
 
   const thingToAdd = target.dataset.addType;
   const newThing = components[thingToAdd]();
@@ -101,6 +122,9 @@ function addThing(e) {
   } else {
     const addRowEl = $(".addRow");
     addRowEl.insertAdjacentElement("beforebegin", newEl);
+
+    const addSlotBtn = newEl.querySelector(".addButton");
+    addSlotBtn.addEventListener("click", addThing);
   }
 }
 
@@ -121,29 +145,6 @@ function addSlotListeners() {
 }
 
 /** @type {EventListener} */
-function saveLayoutTitle(e) {
-  // TODO: This
-}
-
-/** @type {EventListener} */
-function editLayoutTitle(e) {
-  // Make the 'layoutTitle' h1 invisible
-  const h1 = $("#layoutTitle");
-  h1.addC("hide");
-
-  // Make layout title input visible
-  const titleEditor = $("#layoutTitleEditor");
-  titleEditor.addC("hide");
-
-  // Add event listener to 'save' button
-  const saveBtn = $("#saveEditedLayoutTitle");
-  saveBtn.addEventListener("click", saveLayoutTitle);
-
-  // Revert to 'layoutTitle' h1 after new title saved
-  h1.remC("hide");
-}
-
-/** @type {EventListener} */
 function showSlotEditor(e) {
   // Init vars
   const slotEl = /** @type {HTMLElement} */ (e.target);
@@ -153,10 +154,7 @@ function showSlotEditor(e) {
 
   // Attach to DOM
   $("#editLayout").appendChild(newSlotEditor);
-  const newSlotEditorEl = $("#slotEditor");
-
-  // Setup listener for Layout Title change
-  $("#editLayoutTitle").addEventListener("click", editLayoutTitle);
+  const newSlotEditorEl = /** @type {HTMLElement} */ ($("#slotEditor"));
 
   // Set pre-existing options
   const slotTypeOption = /** @type {HTMLOptionElement} */ (
