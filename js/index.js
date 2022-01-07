@@ -96,7 +96,7 @@ function loadLayout(targetLayout) {
 
 /** @type {{[x: string]: MasonComponent}} */
 const components = {
-  slot: (mods = ["slot"]) => Array.isArray(mods) && mods.map(components.modSpan).join(String.raw`<br>`),
+  slot: (mods = [""]) => Array.isArray(mods) && mods.map(components.modSpan).join(String.raw`<br>`),
   row: () => String.raw`
     <div class="slot addSlot">
       <button class="addButton" data-add-type="slot">+ Slot</button>
