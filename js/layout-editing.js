@@ -2,7 +2,7 @@
  * @summary Layout Editing
  */
 
-import { $, cloneTemplate, getMods, getSlotType } from ".";
+import { $, cloneTemplate, getMods, getSlotType } from "./index.js";
 
 let currentLayout = { title: "Unknown Layout", rows: [] };
 

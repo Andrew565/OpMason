@@ -2,8 +2,8 @@
  * @summary Routing
  */
 
-import { $, screens } from ".";
-import { loadLayout } from "./layout-loading";
+import { $, screens } from "./index.js";
+import { loadLayout } from "./layout-loading.js";
 
 const dialogButtons = document.querySelectorAll(".dialog button");
 dialogButtons.forEach((btn) => {
@@ -23,4 +23,3 @@ function switchToEditor(e) {
 function makeInvisible(screen) {
   screen.classList.remove("visible");
 }
-

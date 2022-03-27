@@ -1,0 +1,25 @@
+{
+  "name": "opmason",
+  "version": "1.0.0",
+  "description": "# A LAWSGrid-compatible card game layout maker",
+  "main": "js/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "snowpack dev",
+    "build": "snowpack build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Andrew565/OpMason.git"
+  },
+  "keywords": [],
+  "author": "Andrew Steele",
+  "license": "UNL",
+  "bugs": {
+    "url": "https://github.com/Andrew565/OpMason/issues"
+  },
+  "homepage": "https://github.com/Andrew565/OpMason#readme",
+  "devDependencies": {
+    "snowpack": "^3.8.8"
+  }
+}

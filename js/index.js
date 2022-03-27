@@ -71,3 +71,7 @@ export function getMods(slot) {
   }
   return modifiers;
 }
+
+import("./layout-editing");
+import("./layout-loading");
+import("./routing");

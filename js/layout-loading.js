@@ -2,8 +2,8 @@
  * @summary Layout Loading
  */
 
-import { $, cloneTemplate } from ".";
-import { addButtonListeners, editLayoutTitle } from "./layout-editing";
+import { $, cloneTemplate } from "./index.js";
+import { addButtonListeners, editLayoutTitle } from "./layout-editing.js";
 
 const layouts = {
   newFromScratch: "defaultNewLayout",
