@@ -1,5 +1,12 @@
+:root {
+  --om-green: rgb(137, 225, 171);
+  --om-lightgreen: rgb(187, 207, 210);
+  --om-white: rgb(255, 240, 187);
+  --om-orange: rgb(253, 116, 89);
+}
+
 body {
-  background: darkgreen;
+  background: var(--om-green);
   font-family: Helvetica, Arial, sans-serif;
   margin: 0px;
   padding: 0px;
@@ -23,13 +30,13 @@ main.visible {
 header {
   margin: 0px;
   padding: 0 15px;
-  background: white;
+  background: var(--om-white);
   display: flex;
   justify-content: space-between;
 }
 
 .dialog {
-  background: white;
+  background: var(--om-white);
   margin: 20vh auto;
   height: 15rem;
   width: 50%;
@@ -45,6 +52,7 @@ header {
   border: none;
   background: none;
   height: 2rem;
+  cursor: pointer;
 }
 
 #layoutEditor {
@@ -54,7 +62,7 @@ header {
 .row {
   margin: 1rem 0;
   padding: 1rem;
-  border: 1px solid red;
+  border: 1px solid var(--om-orange);
   border-radius: 10px;
   display: flex;
   justify-content: space-evenly;
@@ -67,10 +75,10 @@ header {
 .slot {
   height: 9rem;
   width: 5.5rem;
-  border: 1px solid white;
+  border: 1px solid var(--om-white);
   border-radius: 10px;
   text-align: center;
-  color: white;
+  color: var(--om-white);
   display: flex;
   flex-direction: column;
   justify-content: center;
