@@ -3,6 +3,7 @@
  */
 
 import { $, getMods, getSlotType } from "./index.js";
+import { download_file } from "./utilities.js";
 
 export function createNewLayout() {
   return { title: "Untitled Document", rows: [] };
@@ -154,13 +155,13 @@ function showSlotEditor(e) {
 
 // Layout Editing - Saving
 function saveLayout() {
-  /** @type {{rows: import('./index').LAWSSlot[][]}} */
-  const layoutObj = { rows: [] };
+  /** @type {{rows: {[x: string]: import('./index').LAWSSlot[]}}} */
+  const layoutObj = { rows: {} };
   const layout = $("#layoutEditor")?.firstElementChild;
   const rows = layout?.querySelectorAll(".row:not(.addRow)");
 
   rows &&
-    rows.forEach((row) => {
+    rows.forEach((row, idx) => {
       /** @type {import('./index').LAWSSlot[]} */
       const rowArr = [];
 
@@ -175,15 +176,11 @@ function saveLayout() {
         rowArr.push(slotObj);
       });
 
-      layoutObj.rows.push(rowArr);
+      layoutObj.rows[`row${idx}`] = rowArr;
     });
 
   const finalLayout = JSON.stringify(layoutObj);
-  console.log("Layout:");
-  console.log(finalLayout);
-  alert("Layout printed out in console.");
-
-  // TODO: display and/or write to a file the layoutObj
+  download_file("MasonLayout.json", finalLayout);
 }
 
 $("#saveLayout")?.addEventListener("click", saveLayout);
