@@ -15,8 +15,8 @@ function switchToEditor(e) {
   const targetLayout = /** @type {HTMLButtonElement} */ (e.target).dataset.target;
   screens.forEach(makeInvisible);
   const editLayoutScreen = $("#editLayout");
-  editLayoutScreen.classList.add("visible");
-  loadLayout(targetLayout);
+  editLayoutScreen?.classList.add("visible");
+  targetLayout && loadLayout(targetLayout);
 }
 
 /** @param {Element} screen */
