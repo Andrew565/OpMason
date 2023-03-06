@@ -3,10 +3,12 @@
  */
 
 /**
- * @typedef {{kind: string; quantity: undefined | string}} ModObj
  * @typedef {(opt?: string | string[]) => string} MasonComponent
+ *
  * @typedef {'EMPTY' | 'SLOT' | 'DRAW_PILE' | 'WASTE_PILE'} LAWSSlotType
+ *
  * @typedef {{kind: string, quantity?: number}} LAWSModifier
+ *
  * @typedef LAWSSlot
  * @property {LAWSSlotType} slotType
  * @property {LAWSModifier[]=} modifiers
