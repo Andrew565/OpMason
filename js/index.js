@@ -11,14 +11,7 @@ export const $ = (/** @type {string} */ selector) => document.querySelector(sele
 export const screens = document.querySelectorAll("main");
 const slotTypes = ["deck", "spacer", "foundation", "waste"];
 
-function createNewLayout() {
-  return { title: "Untitled Document", rows: {} };
-}
 
-export function cloneTemplate(/** @type {string} */ templateId) {
-  const template = /** @type {HTMLTemplateElement} */ ($(`#${templateId}`));
-  return template.content.firstElementChild.cloneNode(true);
-}
 
 /**
  * @param {HTMLElement} target
@@ -39,7 +32,7 @@ function addModifier(target, mod) {
 function removeModifier(target, mod) {
   if (slotTypes.includes(mod)) {
     target.classList.remove(mod);
-  } else {
+  } else if (target.dataset.modifiers) {
     target.dataset.modifiers.includes(mod) && target.dataset.modifiers.replace(mod, "");
   }
 }
@@ -50,7 +43,7 @@ export function getSlotType(slot) {
   if (slot.classList.length > 1) {
     const classes = slot.classList;
     classes.remove("slot");
-    slotType = classes.item(0).toUpperCase();
+    slotType = classes.item(0) || "ERROR";
   }
   return slotType.toLowerCase();
 }
@@ -61,11 +54,11 @@ export function getSlotType(slot) {
  */
 export function getMods(slot) {
   const modifiers = [];
-  if ("modifiers" in slot.dataset) {
+  if ("modifiers" in slot.dataset && slot.dataset.modifiers?.length) {
     const mods = slot.dataset.modifiers.split(",");
     mods.forEach((mod) => {
-      const modObj = { kind: mod, quantity: undefined };
-      if (mod === "limited") modObj.quantity = slot.dataset.limit;
+      const modObj = { kind: mod, quantity: '0' };
+      if (mod === "limited") modObj.quantity = slot.dataset.limit || '0';
       modifiers.push(modObj);
     });
   }
