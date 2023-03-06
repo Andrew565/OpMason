@@ -155,13 +155,13 @@ function showSlotEditor(e) {
 
 // Layout Editing - Saving
 function saveLayout() {
-  /** @type {{rows: {[x: string]: import('./index').LAWSSlot[]}}} */
-  const layoutObj = { rows: {} };
+  /** @type {{rows: import("./index.js").LAWSSlot[][]}} */
+  const layoutObj = { rows: [] };
   const layout = $("#layoutEditor")?.firstElementChild;
   const rows = layout?.querySelectorAll(".row:not(.addRow)");
 
   rows &&
-    rows.forEach((row, idx) => {
+    rows.forEach((row) => {
       /** @type {import('./index').LAWSSlot[]} */
       const rowArr = [];
 
@@ -176,7 +176,7 @@ function saveLayout() {
         rowArr.push(slotObj);
       });
 
-      layoutObj.rows[`row${idx}`] = rowArr;
+      layoutObj.rows.push(rowArr);
     });
 
   const finalLayout = JSON.stringify(layoutObj);
