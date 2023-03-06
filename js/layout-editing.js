@@ -138,7 +138,7 @@ function showSlotEditor(e) {
 
     const limited = modifiers.find((mod) => mod.kind === "limited");
     if (limited) {
-      newSlotEditorEl.dataset.limit = limited.quantity;
+      newSlotEditorEl.dataset.limit = limited.quantity?.toString();
     }
   }
 
@@ -154,12 +154,14 @@ function showSlotEditor(e) {
 
 // Layout Editing - Saving
 function saveLayout() {
+  /** @type {{rows: import('./index').LAWSSlot[][]}} */
   const layoutObj = { rows: [] };
   const layout = $("#layoutEditor")?.firstElementChild;
   const rows = layout?.querySelectorAll(".row:not(.addRow)");
 
   rows &&
     rows.forEach((row) => {
+      /** @type {import('./index').LAWSSlot[]} */
       const rowArr = [];
 
       /** @type {NodeListOf<HTMLElement>} */
@@ -167,6 +169,7 @@ function saveLayout() {
       slots.forEach((slot) => {
         const slotType = getSlotType(slot);
         const modifiers = getMods(slot);
+        /** @type {import('./index').LAWSSlot} */
         const slotObj = { slotType, modifiers };
 
         rowArr.push(slotObj);
