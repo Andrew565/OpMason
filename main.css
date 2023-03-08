@@ -1,12 +1,16 @@
 :root {
-  --om-green: rgb(137, 225, 171);
-  --om-lightgreen: rgb(187, 207, 210);
-  --om-white: rgb(255, 240, 187);
-  --om-orange: rgb(253, 116, 89);
+  --om-turquoise: #01dfb3;
+  --om-yellow: #fed634;
+  --om-black: #1d1c1f;
+  --om-orange: #ffa21f;
+  --om-brown: #322510;
+  --om-red: #fe3e34;
+  --om-white: #dedede;
 }
 
 body {
-  background: var(--om-green);
+  background: var(--om-turquoise);
+  color: var(--om-black);
   font-family: Helvetica, Arial, sans-serif;
   margin: 0px;
   padding: 0px;
@@ -30,13 +34,13 @@ main.visible {
 header {
   margin: 0px;
   padding: 0 15px;
-  background: var(--om-white);
+  background: var(--om-orange);
   display: flex;
   justify-content: space-between;
 }
 
 .dialog {
-  background: var(--om-white);
+  background: var(--om-orange);
   margin: 20vh auto;
   height: 15rem;
   width: 50%;
@@ -47,6 +51,7 @@ header {
 }
 
 .textButton {
+  color: var(--om-brown);
   font-size: 18px;
   font-weight: bold;
   border: none;
@@ -75,15 +80,15 @@ header {
 .slot {
   height: 9rem;
   width: 5.5rem;
-  border: 1px solid var(--om-white);
+  border: 1px solid var(--om-black);
   border-radius: 10px;
   text-align: center;
-  color: var(--om-white);
+  color: var(--om-black);
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 1rem;
-  background: #aaaaaa50;
+  background: var(--om-brown);
 }
 
 .slot.addSlot {
@@ -91,14 +96,14 @@ header {
 }
 
 .slot.spacer {
-  border-color: darkgray;
-  color: darkgray;
-  background: #aaaaaa75;
+  border-color: var(--om-brown);
+  color: var(--om-brown);
+  background: var(--om-brown);
 }
 
 .slot.deck {
-  border-color: lightgreen;
-  color: lightgreen;
+  border-color: var(--om-turquoise);
+  color: var(--om-turquoise);
 }
 
 .slot.foundation {
@@ -109,5 +114,25 @@ header {
 .slot.waste {
   border-color: rebeccapurple;
   color: rebeccapurple;
-  background: #aaaaaa75;
+  background: var(--om-brown);
+}
+
+#slotEditor {
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+#slotEditor .modal {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
 }
